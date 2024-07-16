@@ -15,11 +15,6 @@
             min-height: 100vh;
             margin: 0;
             background: linear-gradient(135deg, #f3ec78, #af4261);
-            animation: backgroundAnimation 10s infinite;
-        }
-        @keyframes backgroundAnimation {
-            0%, 100% { background: linear-gradient(135deg, #f3ec78, #af4261); }
-            50% { background: linear-gradient(135deg, #69eacb, #eac69c); }
         }
         .top-bar {
             text-align: center;
@@ -211,49 +206,7 @@
         }
 
         function addSearchTab() {
-            const newTabId = `searchTab${document.querySelectorAll('.tab').length + 1}`;
-            const newContentId = `searchContent${document.querySelectorAll('.content').length + 1}`;
-
-            const newTab = document.createElement('div');
-            newTab.className = 'tab';
-            newTab.id = newTabId;
-            newTab.textContent = `Tab ${document.querySelectorAll('.tab').length + 1}`;
-            newTab.onclick = function() { switchTab(newContentId); };
-
-            const newContent = document.createElement('div');
-            newContent.className = 'content';
-            newContent.id = newContentId;
-
-            const logo = document.createElement('div');
-            logo.className = 'logo';
-
-            const searchForm = document.createElement('form');
-            searchForm.id = `searchForm${document.querySelectorAll('form').length + 1}`;
-
-            const searchBox = document.createElement('div');
-            searchBox.className = 'search-box';
-
-            const searchInput = document.createElement('input');
-            searchInput.setAttribute('type', 'text');
-            searchInput.setAttribute('id', 'searchInput');
-            searchInput.setAttribute('name', 'q');
-            searchInput.setAttribute('placeholder', 'Search Google or type a URL');
-
-            const submitInput = document.createElement('input');
-            submitInput.setAttribute('type', 'submit');
-            submitInput.setAttribute('value', 'Google Search');
-
-            searchBox.appendChild(searchInput);
-            searchBox.appendChild(submitInput);
-            searchForm.appendChild(searchBox);
-
-            newContent.appendChild(logo);
-            newContent.appendChild(searchForm);
-
-            document.querySelector('.tabs').insertBefore(newTab, document.getElementById('addTab'));
-            document.body.appendChild(newContent);
-
-            switchTab(newContentId);
+            switchTab('search'); // Switch to the search tab
         }
 
         function luckySearch() {
