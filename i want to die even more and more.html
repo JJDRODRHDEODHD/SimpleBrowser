@@ -74,6 +74,7 @@
             background-color: #f0f0f0;
         }
         .content {
+            display: none;
             width: 100%;
             max-width: 800px;
             text-align: center;
@@ -82,6 +83,9 @@
             border-radius: 15px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(10px);
+        }
+        .content.active {
+            display: block;
         }
         .logo {
             width: 272px;
@@ -145,11 +149,11 @@
     </div>
 
     <div class="tabs">
-        <div class="tab active" onclick="switchTab('search')">Search</div>
-        <div class="tab" onclick="switchTab('settings')">Settings</div>
+        <div class="tab active" id="searchTab" onclick="switchTab('search')">Search</div>
+        <div class="tab" id="addTab" onclick="addSearchTab()">Add Tab</div>
     </div>
 
-    <div class="content" id="searchContent">
+    <div class="content active" id="searchContent">
         <div class="logo"></div>
         <form id="searchForm">
             <div class="search-box">
@@ -161,11 +165,6 @@
                 <input type="button" value="I'm Feeling Lucky" onclick="luckySearch()">
             </div>
         </form>
-    </div>
-
-    <div class="content" id="settingsContent" style="display: none;">
-        <h2>Simple Browser Settings</h2>
-        <p>Add your custom settings content here.</p>
     </div>
 
     <script>
@@ -188,7 +187,7 @@
                     document.getElementById('urlInput').value = 'simple://google';
                     break;
                 case 'simple://settings':
-                    switchTab('settings');
+                    addSearchTab(); // Redirect to search tab
                     break;
                 default:
                     alert('Unknown Simple Browser protocol');
@@ -205,8 +204,56 @@
 
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(`${tabName}Content`).style.display = 'block';
+            document.querySelectorAll('.content').forEach(content => content.classList.remove('active'));
+
             document.getElementById(`${tabName}Tab`).classList.add('active');
+            document.getElementById(`${tabName}Content`).classList.add('active');
+        }
+
+        function addSearchTab() {
+            const newTabId = `searchTab${document.querySelectorAll('.tab').length + 1}`;
+            const newContentId = `searchContent${document.querySelectorAll('.content').length + 1}`;
+
+            const newTab = document.createElement('div');
+            newTab.className = 'tab';
+            newTab.id = newTabId;
+            newTab.textContent = `Tab ${document.querySelectorAll('.tab').length + 1}`;
+            newTab.onclick = function() { switchTab(newContentId); };
+
+            const newContent = document.createElement('div');
+            newContent.className = 'content';
+            newContent.id = newContentId;
+
+            const logo = document.createElement('div');
+            logo.className = 'logo';
+
+            const searchForm = document.createElement('form');
+            searchForm.id = `searchForm${document.querySelectorAll('form').length + 1}`;
+
+            const searchBox = document.createElement('div');
+            searchBox.className = 'search-box';
+
+            const searchInput = document.createElement('input');
+            searchInput.setAttribute('type', 'text');
+            searchInput.setAttribute('id', 'searchInput');
+            searchInput.setAttribute('name', 'q');
+            searchInput.setAttribute('placeholder', 'Search Google or type a URL');
+
+            const submitInput = document.createElement('input');
+            submitInput.setAttribute('type', 'submit');
+            submitInput.setAttribute('value', 'Google Search');
+
+            searchBox.appendChild(searchInput);
+            searchBox.appendChild(submitInput);
+            searchForm.appendChild(searchBox);
+
+            newContent.appendChild(logo);
+            newContent.appendChild(searchForm);
+
+            document.querySelector('.tabs').insertBefore(newTab, document.getElementById('addTab'));
+            document.body.appendChild(newContent);
+
+            switchTab(newContentId);
         }
 
         function luckySearch() {
