@@ -181,6 +181,15 @@
             text-decoration: none;
             cursor: pointer;
         }
+
+        .settings-section {
+            margin-top: 20px;
+        }
+
+        .settings-section label {
+            display: block;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -212,15 +221,28 @@
         <div class="modal-content">
             <span class="close" onclick="closeSettings()">&times;</span>
             <h2>Settings</h2>
-            <label for="homepage">Homepage:</label>
-            <input type="text" id="homepage" placeholder="Enter your homepage URL...">
+            <div class="settings-section">
+                <label for="homepage">Homepage:</label>
+                <input type="text" id="homepage" placeholder="Enter your homepage URL...">
+            </div>
+            <div class="settings-section">
+                <label>Preferred Search Engines:</label>
+                <select id="searchEngine">
+                    <option value="https://www.google.com/search?q=">Google</option>
+                    <option value="https://search.yahoo.com/search?p=">Yahoo</option>
+                    <option value="https://www.bing.com/search?q=">Bing</option>
+                    <option value="https://duckduckgo.com/?q=">DuckDuckGo</option>
+                    <option value="https://yandex.com/search/?text=">Yandex</option>
+                </select>
+            </div>
             <button onclick="saveSettings()">Save</button>
         </div>
     </div>
     <script>
         let tabCount = 1;
         let settings = {
-            homepage: 'https://www.example.com'
+            homepage: 'https://www.example.com',
+            searchEngine: 'https://www.google.com/search?q='
         };
 
         function openTab(evt, tabName) {
@@ -271,7 +293,7 @@
 
             if (!url.includes("://")) {
                 if (url.includes(" ")) {
-                    url = "https://www.google.com/search?q=" + encodeURIComponent(url);
+                    url = settings.searchEngine + encodeURIComponent(url);
                 } else {
                     url = "https://" + url;
                 }
@@ -299,10 +321,10 @@
 
         function searchWeb(tabId) {
             const searchInput = document.getElementById(`searchInput${tabId}`).value;
-            const url = "https://www.google.com/search?q=" + encodeURIComponent(searchInput);
+            const searchEngine = settings.searchEngine;
+            const url = searchEngine + encodeURIComponent(searchInput);
 
-            const activeTab = document.getElementById(`tab${tabId}`);
-            activeTab.innerHTML = `<iframe src="${url}" frameborder="0"></iframe>`;
+            window.open(url, '_blank');
         }
 
         function openSettings() {
@@ -315,9 +337,14 @@
 
         function saveSettings() {
             const homepageInput = document.getElementById("homepage").value;
+            const searchEngineSelect = document.getElementById("searchEngine");
+            const selectedEngine = searchEngineSelect.value;
+
             if (homepageInput) {
                 settings.homepage = homepageInput;
             }
+
+            settings.searchEngine = selectedEngine;
             closeSettings();
         }
 
