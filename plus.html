@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Browser 2024 Edition</title>
+    <style>
+        /* Reset some default browser styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Main browser styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .browser {
+            display: flex;
+            flex-direction: column;
+            width: 80%;
+            height: 80%;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            background-color: #2c3e50;
+            padding: 10px;
+        }
+
+        .logo {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .tab-bar {
+            display: flex;
+            background-color: #2c3e50;
+            padding: 10px;
+        }
+
+        .tab-button, .add-tab-button, .settings-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #ecf0f1;
+            transition: background-color 0.3s;
+        }
+
+        .tab-button.active, .tab-button:hover, .add-tab-button:hover, .settings-button:hover {
+            background-color: #34495e;
+        }
+
+        .address-bar {
+            display: flex;
+            padding: 10px;
+            background-color: #ecf0f1;
+        }
+
+        .address-bar input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .go-button {
+            padding: 10px 20px;
+            background-color: #2980b9;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .go-button:hover {
+            background-color: #3498db;
+        }
+
+        .tab-content {
+            flex-grow: 1;
+            display: none;
+        }
+
+        .tab-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* New tab page styles */
+        .new-tab-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background-color: #ecf0f1;
+            padding: 20px;
+        }
+
+        .new-tab-page h1 {
+            margin-bottom: 20px;
+        }
+
+        .new-tab-page input {
+            padding: 10px;
+            margin: 10px 0;
+            width: 60%;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+        }
+
+        .new-tab-page .go-button {
+            padding: 10px 20px;
+            background-color: #2980b9;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .new-tab-page .go-button:hover {
+            background-color: #3498db;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="browser">
+        <div class="header">
+            <img src="https://lh5.googleusercontent.com/JBoXwGsL0C5Sj0t8tYFFndLkdBBHVTuPimbW3RkMK7inu_mPq7T9DHDyTWg-ssxn5H46V24GSj8tTc4z3geEuIiko5qHlUgwmAWFGo1AByDRFnZGBTH0mReYa6CN9IhDSQ=w1280" alt="Simple Browser Logo" class="logo">
+            <h1 style="color: #ecf0f1;">Simple Browser 2024 Edition</h1>
+        </div>
+        <div class="tab-bar">
+            <button class="tab-button active" onclick="openTab(event, 'tab1')">Tab 1</button>
+            <button class="add-tab-button" onclick="addTab()">+</button>
+            <button class="settings-button" onclick="openSettings()">⚙️</button>
+        </div>
+        <div class="address-bar">
+            <input type="text" id="urlInput" placeholder="Enter URL or search...">
+            <button class="go-button" onclick="loadURL()">Go</button>
+        </div>
+        <div id="tab1" class="tab-content active">
+            <div class="new-tab-page">
+                <h1>Welcome to Simple Browser 2024 Edition</h1>
+                <input type="text" id="newTabUrlInput1" placeholder="Enter URL...">
+                <button class="go-button" onclick="loadNewTabURL(1)">Go</button>
+                <input type="text" id="searchInput1" placeholder="Search the web...">
+                <button class="go-button" onclick="searchWeb(1)">Search</button>
+            </div>
+        </div>
+    </div>
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSettings()">&times;</span>
+            <h2>Settings</h2>
+            <label for="homepage">Homepage:</label>
+            <input type="text" id="homepage" placeholder="Enter your homepage URL...">
+            <button onclick="saveSettings()">Save</button>
+        </div>
+    </div>
+    <script>
+        let tabCount = 1;
+        let settings = {
+            homepage: 'https://www.example.com'
+        };
+
+        function openTab(evt, tabName) {
+            const tabButtons = document.getElementsByClassName("tab-button");
+            const tabContents = document.getElementsByClassName("tab-content");
+
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+
+            evt.currentTarget.classList.add("active");
+            document.getElementById(tabName).classList.add("active");
+        }
+
+        function addTab() {
+            tabCount++;
+            const newTabButton = document.createElement("button");
+            newTabButton.className = "tab-button";
+            newTabButton.innerText = `Tab ${tabCount}`;
+            newTabButton.onclick = function(evt) { openTab(evt, `tab${tabCount}`) };
+
+            const newTabContent = document.createElement("div");
+            newTabContent.id = `tab${tabCount}`;
+            newTabContent.className = "tab-content";
+            newTabContent.innerHTML = `
+                <div class="new-tab-page">
+                    <h1>Welcome to Simple Browser 2024 Edition</h1>
+                    <input type="text" id="newTabUrlInput${tabCount}" placeholder="Enter URL...">
+                    <button class="go-button" onclick="loadNewTabURL(${tabCount})">Go</button>
+                    <input type="text" id="searchInput${tabCount}" placeholder="Search the web...">
+                    <button class="go-button" onclick="searchWeb(${tabCount})">Search</button>
+                </div>`;
+
+            document.querySelector(".add-tab-button").before(newTabButton);
+            document.querySelector(".browser").appendChild(newTabContent);
+
+            openTab({ currentTarget: newTabButton }, `tab${tabCount}`);
+        }
+
+        function loadURL() {
+            const urlInput = document.getElementById("urlInput").value;
+            const activeTabContent = document.querySelector(".tab-content.active iframe");
+            let url = urlInput;
+
+            if (!url.includes("://")) {
+                if (url.includes(" ")) {
+                    url = "https://www.google.com/search?q=" + encodeURIComponent(url);
+                } else {
+                    url = "https://" + url;
+                }
+            }
+
+            if (activeTabContent) {
+                activeTabContent.src = url;
+            } else {
+                const activeTab = document.querySelector(".tab-content.active .new-tab-page");
+                activeTab.innerHTML = `<iframe src="${url}" frameborder="0"></iframe>`;
+            }
+        }
+
+        function loadNewTabURL(tabId) {
+            const urlInput = document.getElementById(`newTabUrlInput${tabId}`).value;
+            let url = urlInput;
+
+            if (!url.includes("://")) {
+                url = "https://" + url;
+            }
+
+            const activeTab = document.getElementById(`tab${tabId}`);
+            activeTab.innerHTML = `<iframe src="${url}" frameborder="0"></iframe>`;
+        }
+
+        function searchWeb(tabId) {
+            const searchInput = document.getElementById(`searchInput${tabId}`).value;
+            const url = "https://www.google.com/search?q=" + encodeURIComponent(searchInput);
+
+            const activeTab = document.getElementById(`tab${tabId}`);
+            activeTab.innerHTML = `<iframe src="${url}" frameborder="0"></iframe>`;
+        }
+
+        function openSettings() {
+            document.getElementById("settingsModal").style.display = "block";
+        }
+
+        function closeSettings() {
+            document.getElementById("settingsModal").style.display = "none";
+        }
+
+        function saveSettings() {
+            const homepageInput = document.getElementById("homepage").value;
+            if (homepageInput) {
+                settings.homepage = homepageInput;
+            }
+            closeSettings();
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById("settingsModal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
